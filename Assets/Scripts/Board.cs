@@ -4,26 +4,28 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Board 
+public class Board
 {
     Stack<Tile> Bombitas = new();
     public const int boardRows = 10;
     public const int boardColumns = 10;
-    public Tile[,] tile  = new Tile[boardRows, boardColumns];
+    public Tile[,] tile = new Tile[boardRows, boardColumns];
     public int BombNum { get; private set; } = 20;
 
-    //tempBomb=10              tilesLeft=10  random=rand :V jaj
+    /// <summary>
+    /// Generates the game board by randomly placing bombs and non-bomb tiles.
+    /// </summary>
     public void GenerateBoard()
     {
         int tempBomb = BombNum;
         int tilesLeft = boardColumns * boardRows;
-      
+
         for (int i = 0; i < boardRows; i++)
         {
             for (int j = 0; j < boardColumns; j++)
             {
                 int random = Random.Range(0, 5);
-                if(tilesLeft == tempBomb)
+                if (tilesLeft == tempBomb)
                 {
                     tile[i, j] = new Tile(true);
                     tempBomb--;
@@ -40,17 +42,20 @@ public class Board
                     else
                     {
                         tile[i, j] = new Tile(false);
-                       
+
                         tilesLeft--;
                     }
                 }
-                
+
             }
         }
 
         AddToStack();
     }
 
+    /// <summary>
+    /// Prints the game board to the console.
+    /// </summary>
     public void PrintArray()
     {
         string printArray = " ";
@@ -58,7 +63,7 @@ public class Board
         {
             for (int j = 0; j < boardColumns; j++)
             {
-               if(tile[i, j].BomboN)
+                if (tile[i, j].BomboN)
                 {
                     printArray += 'B';
                 }
@@ -73,28 +78,35 @@ public class Board
         Debug.Log(printArray);
     }
 
+    /// <summary>
+    /// Adds bomb tiles to the stack and checks their surrounding tiles.
+    /// </summary>
     public void AddToStack()
     {
         for (int i = 0; i < boardRows; i++)
         {
             for (int j = 0; j < boardColumns; j++)
             {
-                if (!tile[i, j].BomboN ) continue;
+                if (!tile[i, j].BomboN) continue;
                 Checksurroundind(i, j);
-                
+
             }
         }
     }
+
+    /// <summary>
+    /// Checks the surrounding tiles of a given position and adds them to the stack if they are not bomb tiles.
+    /// </summary>
     public void Checksurroundind(int i, int j)
     {
-        for (int x = i-1; x <= i +1 ; x++)
+        for (int x = i - 1; x <= i + 1; x++)
         {
-            for (int y = j-1; y <= j+1 ; y++)
+            for (int y = j - 1; y <= j + 1; y++)
             {
                 if (x < 0) continue;
-                if(y < 0) continue;
-                if(x >= boardColumns) continue;
-                if(y >= boardRows) continue;
+                if (y < 0) continue;
+                if (x >= boardColumns) continue;
+                if (y >= boardRows) continue;
                 if (tile[x, y].BomboN) continue;
                 Bombitas.Push(tile[x, y]);
                 tile[x, y].Visible();
@@ -102,49 +114,50 @@ public class Board
         }
         AddCounterBombs();
     }
+
+    /// <summary>
+    /// Adds the bombs near a tile by incrementing the BombsNear counter of each surrounding non-bomb tile.
+    /// </summary>
     public void AddCounterBombs()
     {
-        while(Bombitas.Count > 0)
+        while (Bombitas.Count > 0)
         {
             Bombitas.Pop().AddBombsNear();
-
-        }     
+        }
     }
+
+    /// <summary>
+    /// Sets the bomb and non-bomb tile texts in a UI element.
+    /// </summary>
     public void SetBombsTest(Transform parent)
     {
         TMP_Text m_text;
-        int k = 0;
         Transform p = parent;
-        
+        int child = 0;
 
         for (int i = 0; i < boardRows; i++)
         {
             for (int j = 0; j < boardColumns; j++)
             {
-              // m_text = p.GetChild(k).GetComponent<TMP_Text>();
-               
-                m_text = p.GetChild(k).GetComponentInChildren<TMP_Text>();
-               
-               // Debug.Log(m_text);
+                m_text = p.GetChild(child).GetComponentInChildren<TMP_Text>();
 
                 if (tile[i, j].BomboN)
                 {
-                   // Debug.Log("Entre en la primera");
                     m_text.text = "B";
-                   
                 }
                 else
                 {
-                   // Debug.Log("Entre en la seg");
                     m_text.text = tile[i, j].BombsNear.ToString();
-                   
                 }
-                k++;
+                child++;
             }
-           
+
         }
-       
     }
+
+    /// <summary>
+    /// Turns off the text tiles in a UI element.
+    /// </summary>
     public void TurnOffTextTile(Transform parent)
     {
         GameObject g;
@@ -155,4 +168,16 @@ public class Board
         }
     }
 
+    /// <summary>
+    /// Checks the win or lose condition based on a tile's properties.
+    /// </summary>
+    public void WinLoseCondition(int x, int y)
+    {
+        Debug.Log($"{tile[x, y].BombsNear} + {tile[x, y].BomboN}");
+        if (tile[x, y].BomboN)
+        {
+            Debug.Log("Perdiste");
+        }
+    }
 }
+
