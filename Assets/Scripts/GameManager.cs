@@ -1,3 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
 /// <summary>
 /// The GameManager class manages the game logic.
 /// </summary>

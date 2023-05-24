@@ -33,8 +33,15 @@ public class Tile
     public int BombCounter { get; private set; }
 
     /// <summary>
+    /// Gets a value indicating whether the tile contains a bomb.
+    /// </summary>
+    public bool InQueue { get; private set; }
+    /// <summary>
     /// Initializes a new instance of the Tile class.
     /// </summary>
+
+    public int X { get; private set; }
+    public int Y { get; private set; }
     public Tile()
     {
         // TODO: Add any necessary initialization logic.
@@ -63,6 +70,21 @@ public class Tile
     public void Visible()
     {
         IsVisible = true;
+    }
+    /// <summary>
+    /// Makes the tile in de queue.
+    /// </summary>
+    public void InQueueNum()
+    {
+        InQueue = true;
+    }
+    public void AddX(int num)
+    {
+        X = num;
+    }
+    public void Addy(int num)
+    {
+        Y = num;
     }
 }
 

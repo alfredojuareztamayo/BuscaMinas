@@ -15,6 +15,15 @@ public class Buttons : MonoBehaviour
     private bool dead;
     private int x;
     private int y;
+    Transform parentOne;
+    GameObject player;
+    
+
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+        parentOne = player.transform.Find("Panel");
+    }
 
     /// <summary>
     /// Turns on the text tiles and performs win/lose condition check.
@@ -22,8 +31,10 @@ public class Buttons : MonoBehaviour
     public void TurnOnTiles()
     {
         TextTiles.SetActive(true);
-        Debug.Log(x + " " + y);
+        GameManager.Instance.superJuego.AddToQueue(x,y);
+        GameManager.Instance.superJuego.TurnTheQueue(parentOne);
         GameManager.Instance.superJuego.WinLoseCondition(x, y);
+       
     }
 
     private void Update()
