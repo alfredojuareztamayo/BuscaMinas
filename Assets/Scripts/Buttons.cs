@@ -31,8 +31,7 @@ public class Buttons : MonoBehaviour
     public void TurnOnTiles()
     {
         TextTiles.SetActive(true);
-        GameManager.Instance.superJuego.AddToQueue(x,y);
-        GameManager.Instance.superJuego.TurnTheQueue(parentOne);
+        GameManager.Instance.superJuego.AddToQueue(x,y, parentOne);
         GameManager.Instance.superJuego.WinLoseCondition(x, y);
        
     }

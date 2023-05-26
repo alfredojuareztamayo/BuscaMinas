@@ -11,7 +11,7 @@ public class Board
     public const int boardRows = 10;
     public const int boardColumns = 10;
     public Tile[,] tile = new Tile[boardRows, boardColumns];
-    public int BombNum { get; private set; } = 2;
+    public int BombNum { get; private set; } = 20;
 
     /// <summary>
     /// Generates the game board by randomly placing bombs and non-bomb tiles.
@@ -20,41 +20,39 @@ public class Board
     {
         int tempBomb = BombNum;
         int tilesLeft = boardColumns * boardRows;
+      
 
         for (int i = 0; i < boardRows; i++)
         {
+            
             for (int j = 0; j < boardColumns; j++)
             {
-                
+;
                 int random = Random.Range(0, 5);
                 if (tilesLeft == tempBomb)
                 {
                     tile[i, j] = new Tile(true);
-                    tile[i, j].AddX(i);
-                    tile[i, j].Addy(j);
                     tempBomb--;
-                    tilesLeft--;
                 }
                 else
                 {
                     if (tempBomb > 0 & random == 1)
                     {
                         tile[i, j] = new Tile(true);
-                        tile[i, j].AddX(i);
-                        tile[i, j].Addy(j);
                         tempBomb--;
-                        tilesLeft--;
                     }
                     else
                     {
                         tile[i, j] = new Tile(false);
-                        tile[i, j].AddX(i);
-                        tile[i, j].Addy(j);
-                        tilesLeft--;
                     }
                 }
-
+                tile[i, j].AddX(j);
+                tile[i, j].Addy(i);
+                tilesLeft--;
+             
             }
+
+        
         }
 
         AddToStack();
@@ -192,20 +190,22 @@ public class Board
     /// <summary>
     ///  Adds tiles to the queue and checks their surrounding tiles. if the number is 0
     /// </summary>
-    public void AddToQueue(int i, int j)
+    public void AddToQueue(int i, int j, Transform h)
     {
-
-        if (tile[i, j].BombsNear == 0)
+        Transform H = h;
+        if (tile[i, j].BombsNear == 0 && !tile[i, j].InQueue)
         {
-            ChecksurroundindQueue(i, j);
+            ChecksurroundindQueue(i, j, H);
         }
+        
         
     }
     /// <summary>
     /// Checks the surrounding tiles of a given position and adds them to the queue if they are not bomb tiles.
     /// </summary>
-    public void ChecksurroundindQueue(int i, int j)
+    public void ChecksurroundindQueue(int i, int j, Transform h)
     {
+        Transform H = h;
         for (int x = i - 1; x <= i + 1; x++)
         {
             for (int y = j - 1; y <= j + 1; y++)
@@ -214,15 +214,17 @@ public class Board
                 if (y < 0) continue;
                 if (x >= boardColumns) continue;
                 if (y >= boardRows) continue;
-               // if (tile[x, y].BombsNear != 0) continue;
+              // if (tile[x, y].BombsNear != 0) continue;
                 if (tile[x, y].BomboN) continue;
               
                 QueueBombs.Enqueue(tile[x, y]);
-                
+                tile[x, y].InQueueNum();
+
+
             }
         }
 
-      // AddBoolQueue();
+        TurnTheQueue(H);
     }
 
     /// <summary>
@@ -247,17 +249,23 @@ public class Board
         
         GameObject g;
         int z;
-        int x;
-        int y;
-        foreach (Tile child in QueueBombs)
+
+
+        while (QueueBombs.Count > 0)
         {
-            x = child.X;
-            y = child.Y;
-            z = x + y;
+            Tile temp = QueueBombs.Dequeue();
+            z = temp.X + temp.Y*boardRows;
+            Debug.Log(z);
             g = h.GetChild(z).Find("TextTag").gameObject;
             g.SetActive(true);
-            QueueBombs.Dequeue();
+            AddToQueue(temp.X, temp.Y,h);
         }
+        
+            
+          
+            
+          
+        
     }
 }
 

@@ -578,7 +578,7 @@ GameObject:
   - component: {fileID: 716814057}
   m_Layer: 5
   m_Name: Start
-  m_TagString: Untagged
+  m_TagString: ButtonStart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -770,7 +770,7 @@ GameObject:
   - component: {fileID: 1648263657}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

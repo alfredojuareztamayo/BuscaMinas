@@ -21,6 +21,10 @@ public class GameManager : MonoBehaviour
     /// Reference to a GameObject.
     /// </summary>
     private GameObject m_gameObject2;
+    /// <summary>
+    /// Reference to a GameObject.
+    /// </summary>
+    private GameObject ButtonStart;
 
     /// <summary>
     /// Singleton instance of GameManager.
@@ -41,6 +45,8 @@ public class GameManager : MonoBehaviour
         // Assign the transform of m_gameObject2 to m_game2
         m_game2 = m_gameObject2.transform;
 
+        ButtonStart = GameObject.FindGameObjectWithTag("ButtonStart");
+
         // Generate the game board using the superJuego object
         superJuego.GenerateBoard();
     }
@@ -60,6 +66,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Hola"); // Output "Hola" to the console
         superJuego.PrintArray(); // Call the PrintArray method of the superJuego object
+        ButtonStart.SetActive(false);
     }
 
     /// <summary>
